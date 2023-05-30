@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGODB_DATABASE: ${DB_NAME}
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - host-alert
+
+  api:
+    build: .
+    container_name: host-alert-api
+    depends_on:
+      - mongo
+    ports:
+      - "3000:3000"
+    environment:
+      DB_URL: mongodb://mongo:27017/${DB_NAME}
+    networks:
+      - host-alert
+
+volumes:
+  mongo-data:
+
+networks:
+  host-alert:
