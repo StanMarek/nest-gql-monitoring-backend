@@ -10,11 +10,11 @@ services:
     volumes:
       - mongo-data:/data/db
     networks:
-      - host-alert
+      - nest-gql-monitoring
 
   api:
     build: .
-    container_name: host-alert-api
+    container_name: nest-gql-monitoring-backend
     depends_on:
       - mongo
     ports:
@@ -22,10 +22,10 @@ services:
     environment:
       DB_URL: mongodb://mongo:27017/${DB_NAME}
     networks:
-      - host-alert
+      - nest-gql-monitoring
 
 volumes:
   mongo-data:
 
 networks:
-  host-alert:
+  nest-gql-monitoring:

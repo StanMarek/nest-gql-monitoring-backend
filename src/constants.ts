@@ -10,4 +10,5 @@ export enum ErrorsMessages {
   EMAIL_EXIST = 'User with this email already exist',
   PHONE_EXIST = 'User with this phone already exist',
   LOGIN_ERROR = 'Could not log-in with the provided credentials',
+  USER_NOT_FOUND = 'User not found',
 }

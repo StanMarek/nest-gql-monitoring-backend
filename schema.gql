@@ -31,6 +31,11 @@ enum Role {
   CLIENT_USER
 }
 
+type Authorization {
+  token: String!
+  expiresIn: Int!
+}
+
 type Query {
   users: [User!]!
   user(id: String!): User!
@@ -40,6 +45,8 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: String!): User!
+  signIn(signIn: SignInInput!): Authorization!
+  signUp(signUp: SignUpInput!): User!
 }
 
 input CreateUserInput {
@@ -59,4 +66,18 @@ input UpdateUserInput {
   password: String
   role: String = "CLIENT_USER"
   id: String!
+}
+
+input SignInInput {
+  email: String!
+  password: String!
+}
+
+input SignUpInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  phone: String!
+  password1: String!
+  password2: String!
 }

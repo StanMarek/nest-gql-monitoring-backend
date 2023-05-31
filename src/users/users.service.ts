@@ -20,11 +20,23 @@ export class UsersService extends BaseService<
     super(userModel);
   }
 
-  create(createDto: CreateUserInput) {
-    const user = this.userModel.findOne({ email: createDto.email });
-    if (user) {
+  async create(createDto: CreateUserInput) {
+    await this.userIsUnique(createDto.phone, createDto.email);
+
+    return super.create(createDto);
+  }
+
+  async userIsUnique(phone: string, email: string) {
+    const user = await this.userModel.findOne({
+      $or: [{ phone }, { email }],
+    });
+
+    if (user && user.phone === phone) {
+      throw new BadRequestException(ErrorsMessages.PHONE_EXIST);
+    }
+
+    if (user && user.email === email) {
       throw new BadRequestException(ErrorsMessages.EMAIL_EXIST);
     }
-    return super.create(createDto);
   }
 }
