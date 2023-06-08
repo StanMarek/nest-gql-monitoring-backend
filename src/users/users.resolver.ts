@@ -12,13 +12,15 @@ import { UsersService } from './users.service';
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard, RoleGuard)
+  @AllowRole(Role.ADMIN)
   @Mutation(() => User)
   createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
     return this.usersService.create(createUserInput);
   }
 
   @UseGuards(GqlAuthGuard, RoleGuard)
+  @AllowRole(Role.ADMIN)
   @Query(() => [User], { name: 'users' })
   findAll() {
     return this.usersService.findAll();
@@ -31,7 +33,8 @@ export class UsersResolver {
     return this.usersService.findOne({ _id: id });
   }
 
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard, RoleGuard)
+  @AllowRole(Role.ADMIN)
   @Mutation(() => User)
   updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
     return this.usersService.update(
@@ -40,7 +43,8 @@ export class UsersResolver {
     );
   }
 
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard, RoleGuard)
+  @AllowRole(Role.ADMIN)
   @Mutation(() => User)
   removeUser(@Args('id', { type: () => String }) id: number) {
     return this.usersService.remove({ _id: id });

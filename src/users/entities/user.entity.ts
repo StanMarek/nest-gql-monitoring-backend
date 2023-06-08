@@ -4,9 +4,9 @@ import { Document } from 'mongoose';
 import { BaseSchema } from 'src/common/base.schema';
 
 export enum Role {
-  ADMIN = 'ADMIN',
-  CLIENT_ADMIN = 'CLIENT_ADMIN',
   CLIENT_USER = 'CLIENT_USER',
+  CLIENT_ADMIN = 'CLIENT_ADMIN',
+  ADMIN = 'ADMIN',
 }
 
 registerEnumType(Role, { name: 'Role' });

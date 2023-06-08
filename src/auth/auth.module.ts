@@ -9,15 +9,7 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
-  providers: [
-    AuthResolver,
-    AuthService,
-    JwtStrategy,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: GqlAuthGuard,
-    // },
-  ],
+  providers: [AuthResolver, AuthService, JwtStrategy],
   imports: [
     ConfigModule.forFeature(authConfig),
     JwtModule.registerAsync({

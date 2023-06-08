@@ -14,15 +14,19 @@ export class RoleGuard implements CanActivate {
       context.getClass(),
     ]);
     const ctx = GqlExecutionContext.create(context);
-    console.log('roles: ', lowestAllowRole);
-    // console.log('context: ', context.switchToHttp().getRequest());
-    console.log('gqlContext: ', ctx.getContext().req);
 
     if (!lowestAllowRole) {
       return true;
     }
+
     const role: Role = ctx.getContext().req.user.role;
 
-    return role >= lowestAllowRole;
+    const MAP_USER_ROLES = {
+      CLIENT_USER: 0,
+      CLIENT_ADMIN: 1,
+      ADMIN: 2,
+    };
+
+    return MAP_USER_ROLES[role] >= MAP_USER_ROLES[lowestAllowRole];
   }
 }
