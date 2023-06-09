@@ -1,5 +1,6 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Types } from 'mongoose';
 import { AllowRole } from 'src/auth/decorators/role.decorator';
 import { GqlAuthGuard } from 'src/auth/guard/gql-auth.guard';
 import { RoleGuard } from 'src/auth/guard/role.guard';
@@ -29,7 +30,7 @@ export class UsersResolver {
   @AllowRole(Role.ADMIN)
   @UseGuards(GqlAuthGuard, RoleGuard)
   @Query(() => User, { name: 'user' })
-  findOne(@Args('id', { type: () => String }) id: number) {
+  findOne(@Args('id', { type: () => String }) id: Types.ObjectId) {
     return this.usersService.findOne({ _id: id });
   }
 
@@ -46,7 +47,7 @@ export class UsersResolver {
   @UseGuards(GqlAuthGuard, RoleGuard)
   @AllowRole(Role.ADMIN)
   @Mutation(() => User)
-  removeUser(@Args('id', { type: () => String }) id: number) {
+  removeUser(@Args('id', { type: () => String }) id: Types.ObjectId) {
     return this.usersService.remove({ _id: id });
   }
 }
