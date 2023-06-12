@@ -18,6 +18,10 @@ export class Device extends BaseSchema {
   @Field()
   latestVersion: string;
 
+  @Prop({ required: true, unique: true, index: true })
+  @Field()
+  serial: string;
+
   @Prop({ required: false, type: mongoose.Schema.Types.ObjectId, ref: 'Owner' })
   @Field({ nullable: true })
   user?: User;

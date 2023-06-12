@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { BaseService } from 'src/common/base.service';
@@ -19,8 +19,10 @@ export class DevicesService extends BaseService<
     super(deviceModel);
   }
 
-  create(createDeviceInput: CreateDeviceInput) {
+  async create(createDeviceInput: CreateDeviceInput) {
+    await this.validate(createDeviceInput);
     return this.deviceModel.create({
+      serial: createDeviceInput.serial,
       latestVersion: createDeviceInput.version,
       currentVersion: createDeviceInput.version,
     });
@@ -28,5 +30,17 @@ export class DevicesService extends BaseService<
 
   deleteMany(filter: FilterQuery<Device>) {
     return this.deviceModel.deleteMany(filter);
+  }
+
+  async validate(createDeviceInput: CreateDeviceInput) {
+    const device = await this.deviceModel.findOne({
+      $or: [{ serial: createDeviceInput.serial }],
+    });
+
+    if (device) {
+      throw new BadRequestException(
+        `Device with serial '${createDeviceInput.serial}' already exists`,
+      );
+    }
   }
 }

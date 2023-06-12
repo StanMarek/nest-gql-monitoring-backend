@@ -37,6 +37,7 @@ type Device {
   updatedAt: DateTime!
   currentVersion: String!
   latestVersion: String!
+  serial: String!
   user: User
   isActive: Boolean!
 }
@@ -86,9 +87,14 @@ input UpdateUserInput {
 input CreateDeviceInput {
   """Default version of device"""
   version: String!
+
+  """Unique device identifier"""
+  serial: String!
 }
 
 input UpdateDeviceInput {
+  """Unique device identifier"""
+  serial: String
   id: String!
 }
 

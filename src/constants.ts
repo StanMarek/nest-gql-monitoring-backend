@@ -1,6 +1,7 @@
 export const Cookies = {
-  JWT: 'host-alert-jwt',
+  JWT: 'cookie-jwt',
 };
+
 export enum ErrorsMessages {
   INVALID_ID = 'Invalid ObjectId',
   NAME_EXIST = 'With name already exist',
