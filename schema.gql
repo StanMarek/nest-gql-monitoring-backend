@@ -40,6 +40,7 @@ type Device {
   serial: String!
   user: User
   isActive: Boolean!
+  publishTopic: String!
 }
 
 type Authorization {

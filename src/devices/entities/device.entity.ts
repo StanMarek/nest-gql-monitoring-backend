@@ -37,6 +37,10 @@ export class Device extends BaseSchema {
   @Prop({ required: true, default: true })
   @Field()
   isActive: boolean;
+
+  @Prop({ required: true })
+  @Field()
+  publishTopic: string;
 }
 
 export type DeviceDocument = Device & Document;

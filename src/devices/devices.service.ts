@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { BaseService } from 'src/common/base.service';
@@ -15,17 +16,26 @@ export class DevicesService extends BaseService<
   constructor(
     @InjectModel(Device.name)
     private deviceModel: Model<DeviceDocument>,
+    private readonly configService: ConfigService,
   ) {
     super(deviceModel);
   }
 
   async create(createDeviceInput: CreateDeviceInput) {
     await this.validate(createDeviceInput);
+    const publishTopic = `${this.configService.get<string>(
+      'MQTT_PUBLISH_TOPIC',
+    )}/${createDeviceInput.serial}/servertodevice`;
     return this.deviceModel.create({
       serial: createDeviceInput.serial,
+      publishTopic,
       latestVersion: createDeviceInput.version,
       currentVersion: createDeviceInput.version,
     });
+  }
+
+  findOneBySerial(serial: string) {
+    return this.findOne({ serial });
   }
 
   deleteMany(filter: FilterQuery<Device>) {

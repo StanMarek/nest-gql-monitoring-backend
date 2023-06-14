@@ -39,6 +39,7 @@
     "graphql": "^16.6.0",
     "graphql-tools": "^9.0.0",
     "mongoose": "^7.2.1",
+    "mqtt": "^4.3.7",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.13",

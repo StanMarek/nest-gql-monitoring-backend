@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import databaseConfig from './config/database.config';
 import { UsersModule } from './users/users.module';
 import { DevicesModule } from './devices/devices.module';
+import { MqttModule } from './mqtt/mqtt.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { DevicesModule } from './devices/devices.module';
     UsersModule,
     AuthModule,
     DevicesModule,
+    MqttModule,
   ],
   controllers: [AppController],
   providers: [AppService],
