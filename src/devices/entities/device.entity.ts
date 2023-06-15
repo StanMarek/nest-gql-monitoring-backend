@@ -3,8 +3,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { BaseSchema } from 'src/common/base.schema';
 import { User } from 'src/users/entities/user.entity';
+import { DeviceConfig } from './device-config.schema';
 
-@ObjectType()
 @Schema({ timestamps: true })
 @ObjectType({
   implements: BaseSchema,
@@ -26,16 +26,16 @@ export class Device extends BaseSchema {
   @Field({ nullable: true })
   user?: User;
 
-  // @Prop({ required: true, default: DefaultConfig})
-  // @Field()
-  // config: Config;
+  @Prop({ required: true })
+  @Field(() => DeviceConfig)
+  config: DeviceConfig;
 
   // @Prop({ required: false })
   // @Field()
   // location?: Location;
 
   @Prop({ required: true, default: true })
-  @Field()
+  @Field({ defaultValue: true })
   isActive: boolean;
 
   @Prop({ required: true })

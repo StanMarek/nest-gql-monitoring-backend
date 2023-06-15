@@ -31,7 +31,70 @@ enum Role {
   ADMIN
 }
 
-type Device {
+type EnvConfig {
+  env_hmax2: Int!
+  env_hmax1: Int!
+  env_alarm1_flag: Int!
+  env_tmax1: Int!
+  env_tmin1: Int!
+  env_tmax2: Int!
+  env_hmin2: Int!
+  env_rap_limit: Int!
+  env_ivl: Int!
+  env_tmin2: Int!
+  env_hmin1: Int!
+}
+
+type MicConfig {
+  mic_alarm1_flag: Int!
+  mic_lvl2: Int!
+  mic_lvl1: Int!
+  mic_alarm2_flag: Int!
+  mic_time2: Int!
+  mic_time1: Int!
+  mic_rap_limit: Int!
+  mic_al1_set: Int!
+  mic_al1_flag: Int!
+  mic_ivl: Int!
+  mic_al2_flag: Int!
+}
+
+type LightConfig {
+  light_ivl: Int!
+  light_rap_limit: Int!
+}
+
+type MoveConfig {
+  move_async_rep: Int!
+  move_min_time: Int!
+  move_ivl: Int!
+  move_rap_limit: Int!
+}
+
+type SystemConfig {
+  led_light1: Int!
+  buzz_vol1: Int!
+  heartbeat_ivl: Int!
+  pwr_mode: Int!
+  buzz_vol2: Int!
+  led_time1: Int!
+  wifi_mode: Int!
+  buzz_time1: Int!
+  led_time2: Int!
+  led_light2: Int!
+  buzz_time2: Int!
+}
+
+type DeviceConfig {
+  timestamp: Float!
+  env: EnvConfig!
+  mic: MicConfig!
+  light: LightConfig!
+  move: MoveConfig!
+  system: SystemConfig!
+}
+
+type Device implements BaseSchema {
   _id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -39,6 +102,7 @@ type Device {
   latestVersion: String!
   serial: String!
   user: User
+  config: DeviceConfig!
   isActive: Boolean!
   publishTopic: String!
 }
@@ -61,6 +125,7 @@ type Mutation {
   removeUser(id: String!): User!
   createDevice(createDeviceInput: CreateDeviceInput!): Device!
   updateDevice(updateDeviceInput: UpdateDeviceInput!): Device!
+  setDeviceConfig(setDeviceConfigInput: SetDeviceConfigInput!): Device!
   removeDevice(id: String!): Device!
   signIn(signIn: SignInInput!): Authorization!
   signUp(signUp: SignUpInput!): User!
@@ -94,9 +159,72 @@ input CreateDeviceInput {
 }
 
 input UpdateDeviceInput {
-  """Unique device identifier"""
-  serial: String
   id: String!
+  currentVersion: String!
+  latestVersion: String!
+}
+
+input SetDeviceConfigInput {
+  id: String!
+  env: EnvInput!
+  mic: MicInput!
+  light: LightInput!
+  move: MoveInput!
+  system: SystemInput!
+}
+
+input EnvInput {
+  env_hmax2: Int!
+  env_hmax1: Int!
+  env_alarm1_flag: Int!
+  env_tmax1: Int!
+  env_tmin1: Int!
+  env_tmax2: Int!
+  env_hmin2: Int!
+  env_rap_limit: Int!
+  env_ivl: Int!
+  env_tmin2: Int!
+  env_hmin1: Int!
+}
+
+input MicInput {
+  mic_alarm1_flag: Int!
+  mic_lvl2: Int!
+  mic_lvl1: Int!
+  mic_alarm2_flag: Int!
+  mic_time2: Int!
+  mic_time1: Int!
+  mic_rap_limit: Int!
+  mic_al1_set: Int!
+  mic_al1_flag: Int!
+  mic_ivl: Int!
+  mic_al2_flag: Int!
+}
+
+input LightInput {
+  light_ivl: Int!
+  light_rap_limit: Int!
+}
+
+input MoveInput {
+  move_async_rep: Int!
+  move_min_time: Int!
+  move_ivl: Int!
+  move_rap_limit: Int!
+}
+
+input SystemInput {
+  led_light1: Int!
+  buzz_vol1: Int!
+  heartbeat_ivl: Int!
+  pwr_mode: Int!
+  buzz_vol2: Int!
+  led_time1: Int!
+  wifi_mode: Int!
+  buzz_time1: Int!
+  led_time2: Int!
+  led_light2: Int!
+  buzz_time2: Int!
 }
 
 input SignInInput {

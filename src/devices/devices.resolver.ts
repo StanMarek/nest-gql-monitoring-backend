@@ -7,6 +7,7 @@ import { RoleGuard } from 'src/auth/guard/role.guard';
 import { Role } from 'src/users/entities/user.entity';
 import { DevicesService } from './devices.service';
 import { CreateDeviceInput } from './dto/create-device.input';
+import { SetDeviceConfigInput } from './dto/set-device-config.input';
 import { UpdateDeviceInput } from './dto/update-device.input';
 import { Device } from './entities/device.entity';
 
@@ -45,6 +46,18 @@ export class DevicesResolver {
     return this.devicesService.update(
       { _id: updateDeviceInput.id },
       updateDeviceInput,
+    );
+  }
+
+  @UseGuards(GqlAuthGuard, RoleGuard)
+  @AllowRole(Role.CLIENT_ADMIN)
+  @Mutation(() => Device)
+  setDeviceConfig(
+    @Args('setDeviceConfigInput') setDeviceConfigInput: SetDeviceConfigInput,
+  ) {
+    return this.devicesService.setConfig(
+      { _id: setDeviceConfigInput.id },
+      setDeviceConfigInput,
     );
   }
 

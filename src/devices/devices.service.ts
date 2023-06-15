@@ -3,7 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { BaseService } from 'src/common/base.service';
+import { DEFAULT_DEVICE_CONFIG } from 'src/constants';
 import { CreateDeviceInput } from './dto/create-device.input';
+import { SetDeviceConfigInput } from './dto/set-device-config.input';
 import { UpdateDeviceInput } from './dto/update-device.input';
 import { Device, DeviceDocument } from './entities/device.entity';
 
@@ -31,6 +33,10 @@ export class DevicesService extends BaseService<
       publishTopic,
       latestVersion: createDeviceInput.version,
       currentVersion: createDeviceInput.version,
+      config: {
+        ...DEFAULT_DEVICE_CONFIG,
+        timestamp: new Date().getTime(),
+      },
     });
   }
 
@@ -52,5 +58,25 @@ export class DevicesService extends BaseService<
         `Device with serial '${createDeviceInput.serial}' already exists`,
       );
     }
+  }
+
+  async setConfig(
+    filter: FilterQuery<Device>,
+    setDeviceConfigInput: SetDeviceConfigInput,
+  ) {
+    await this.findOne(filter);
+    delete setDeviceConfigInput.id;
+
+    return this.deviceModel.findOneAndUpdate(
+      filter,
+      {
+        $set: {
+          config: { ...setDeviceConfigInput, timestamp: new Date().getTime() },
+        },
+      },
+      {
+        new: true,
+      },
+    );
   }
 }

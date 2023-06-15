@@ -1,9 +1,9 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsString } from 'class-validator';
+import { IsSemVer, IsString } from 'class-validator';
 
 @InputType()
 export class CreateDeviceInput {
-  @IsString()
+  @IsSemVer()
   @Field({ description: 'Default version of device' })
   version: string;
 

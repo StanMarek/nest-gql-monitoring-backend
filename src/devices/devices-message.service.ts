@@ -5,7 +5,7 @@ import { DevicesService } from './devices.service';
 
 @Injectable()
 export class DevicesMessageService {
-  private mqttClient: mqtt.MqttClient;
+  private mqttClient: mqtt.MqttClient = null;
   constructor(private readonly devicesService: DevicesService) {}
 
   setMqttClient(mqttClient: mqtt.MqttClient) {
@@ -14,6 +14,6 @@ export class DevicesMessageService {
 
   async handleMessage(message: Message) {
     const device = await this.devicesService.findOneBySerial(message.device_id);
-    this.mqttClient.publish(device.publishTopic, 'test');
+    // this.mqttClient.publish(device.publishTopic, 'test');
   }
 }
