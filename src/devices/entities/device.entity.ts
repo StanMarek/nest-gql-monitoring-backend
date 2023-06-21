@@ -2,6 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { BaseSchema } from 'src/common/base.schema';
+import { Location } from 'src/locations/entities/location.entity';
 import { User } from 'src/users/entities/user.entity';
 import { DeviceConfig } from './device-config.schema';
 
@@ -22,17 +23,21 @@ export class Device extends BaseSchema {
   @Field()
   serial: string;
 
-  @Prop({ required: false, type: mongoose.Schema.Types.ObjectId, ref: 'Owner' })
-  @Field({ nullable: true })
+  @Prop({ required: false, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  @Field(() => User, { nullable: true })
   user?: User;
 
-  @Prop({ required: true })
+  @Prop({ type: DeviceConfig, required: true })
   @Field(() => DeviceConfig)
   config: DeviceConfig;
 
-  // @Prop({ required: false })
-  // @Field()
-  // location?: Location;
+  @Prop({
+    required: false,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Location',
+  })
+  @Field(() => Location, { nullable: true })
+  location?: Location;
 
   @Prop({ required: true, default: true })
   @Field({ defaultValue: true })

@@ -10,6 +10,7 @@ import databaseConfig from './config/database.config';
 import { UsersModule } from './users/users.module';
 import { DevicesModule } from './devices/devices.module';
 import { MqttModule } from './mqtt/mqtt.module';
+import { LocationsModule } from './locations/locations.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { MqttModule } from './mqtt/mqtt.module';
     AuthModule,
     DevicesModule,
     MqttModule,
+    LocationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
