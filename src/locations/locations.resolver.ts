@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, UseInterceptors } from '@nestjs/common';
 import {
   Args,
   Mutation,
@@ -12,6 +12,7 @@ import { GetUser } from 'src/auth/decorators/get-user.decorator';
 import { AllowRole } from 'src/auth/decorators/role.decorator';
 import { GqlAuthGuard } from 'src/auth/guard/gql-auth.guard';
 import { RoleGuard } from 'src/auth/guard/role.guard';
+import { UserInterceptor } from 'src/common/user.interceptor';
 import { Role, User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { CreateLocationInput } from './dto/create-location.input';
@@ -19,6 +20,7 @@ import { UpdateLocationInput } from './dto/update-location.input';
 import { Location } from './entities/location.entity';
 import { LocationsService } from './locations.service';
 
+@UseInterceptors(UserInterceptor)
 @Resolver(() => Location)
 export class LocationsResolver {
   constructor(
@@ -30,35 +32,41 @@ export class LocationsResolver {
   @AllowRole(Role.CLIENT_ADMIN)
   @Mutation(() => Location)
   createLocation(
+    @GetUser() user: User,
     @Args('createLocationInput') createLocationInput: CreateLocationInput,
   ) {
-    return this.locationsService.create(createLocationInput);
+    return this.locationsService.create({
+      ...createLocationInput,
+      user: user._id,
+    });
   }
 
   @UseGuards(GqlAuthGuard, RoleGuard)
   @AllowRole(Role.CLIENT_ADMIN)
   @Query(() => [Location], { name: 'locations' })
   findAll(@GetUser() user: User) {
-    // TODO: create user interceptor to extract user from request
-    console.log(user);
-    return this.locationsService.findAll();
+    return this.locationsService.findAll({ user });
   }
 
   @UseGuards(GqlAuthGuard, RoleGuard)
   @AllowRole(Role.CLIENT_ADMIN)
   @Query(() => Location, { name: 'location' })
-  findOne(@Args('id', { type: () => String }) id: Types.ObjectId) {
-    return this.locationsService.findOne({ _id: id });
+  findOne(
+    @GetUser() user: User,
+    @Args('id', { type: () => String }) id: Types.ObjectId,
+  ) {
+    return this.locationsService.findOne({ _id: id, user });
   }
 
   @UseGuards(GqlAuthGuard, RoleGuard)
   @AllowRole(Role.CLIENT_ADMIN)
   @Mutation(() => Location)
   updateLocation(
+    @GetUser() user: User,
     @Args('updateLocationInput') updateLocationInput: UpdateLocationInput,
   ) {
     return this.locationsService.update(
-      { _id: updateLocationInput.id },
+      { _id: updateLocationInput.id, user },
       updateLocationInput,
     );
   }
@@ -66,12 +74,15 @@ export class LocationsResolver {
   @UseGuards(GqlAuthGuard, RoleGuard)
   @AllowRole(Role.CLIENT_ADMIN)
   @Mutation(() => Location)
-  removeLocation(@Args('id', { type: () => String }) id: Types.ObjectId) {
-    return this.locationsService.remove({ _id: id });
+  removeLocation(
+    @GetUser() user: User,
+    @Args('id', { type: () => String }) id: Types.ObjectId,
+  ) {
+    return this.locationsService.remove({ _id: id, user });
   }
 
   @ResolveField('user', () => User)
-  async getUser(@Parent() location: Location) {
+  async getLocationUser(@Parent() location: Location) {
     const { user } = location;
     return this.usersService.findOne({ _id: user });
   }

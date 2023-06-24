@@ -1,5 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsString } from 'class-validator';
+import { Types } from 'mongoose';
 
 @InputType()
 export class CreateLocationInput {
@@ -26,4 +27,6 @@ export class CreateLocationInput {
   @IsString()
   @Field()
   code: string;
+
+  user: string | Types.ObjectId;
 }
