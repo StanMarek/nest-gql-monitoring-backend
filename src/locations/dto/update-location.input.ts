@@ -1,8 +1,10 @@
+import { Field, InputType, PartialType } from '@nestjs/graphql';
+import { IsMongoId } from 'class-validator';
 import { CreateLocationInput } from './create-location.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateLocationInput extends PartialType(CreateLocationInput) {
-  @Field(() => Int)
-  id: number;
+  @IsMongoId()
+  @Field()
+  id: string;
 }

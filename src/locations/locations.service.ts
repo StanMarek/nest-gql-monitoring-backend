@@ -1,26 +1,21 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { BaseService } from 'src/common/base.service';
 import { CreateLocationInput } from './dto/create-location.input';
 import { UpdateLocationInput } from './dto/update-location.input';
+import { Location, LocationDocument } from './entities/location.entity';
 
 @Injectable()
-export class LocationsService {
-  create(createLocationInput: CreateLocationInput) {
-    return 'This action adds a new location';
-  }
-
-  findAll() {
-    return `This action returns all locations`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} location`;
-  }
-
-  update(id: number, updateLocationInput: UpdateLocationInput) {
-    return `This action updates a #${id} location`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} location`;
+export class LocationsService extends BaseService<
+  Location,
+  CreateLocationInput,
+  UpdateLocationInput
+> {
+  constructor(
+    @InjectModel(Location.name)
+    private locationModel: Model<LocationDocument>,
+  ) {
+    super(locationModel);
   }
 }
