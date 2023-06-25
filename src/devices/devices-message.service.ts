@@ -14,6 +14,7 @@ export class DevicesMessageService {
 
   async handleMessage(message: Message) {
     const device = await this.devicesService.findOneBySerial(message.device_id);
+    console.log(message);
     // this.mqttClient.publish(device.publishTopic, 'test');
   }
 }

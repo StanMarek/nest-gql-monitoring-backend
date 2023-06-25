@@ -144,6 +144,7 @@ type Mutation {
   createDevice(createDeviceInput: CreateDeviceInput!): Device!
   updateDevice(updateDeviceInput: UpdateDeviceInput!): Device!
   setDeviceConfig(setDeviceConfigInput: SetDeviceConfigInput!): Device!
+  registerDevice(id: String!): Device!
   removeDevice(id: String!): Device!
   createLocation(createLocationInput: CreateLocationInput!): Location!
   updateLocation(updateLocationInput: UpdateLocationInput!): Location!
@@ -193,8 +194,8 @@ input CreateDeviceInput {
 
 input UpdateDeviceInput {
   id: String!
-  currentVersion: String!
-  latestVersion: String!
+  currentVersion: String
+  latestVersion: String
 }
 
 input SetDeviceConfigInput {
