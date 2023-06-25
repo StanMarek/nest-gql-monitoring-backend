@@ -13,5 +13,6 @@ import { LocationsService } from './locations.service';
       { name: Location.name, useFactory: () => LocationSchema },
     ]),
   ],
+  exports: [LocationsService],
 })
 export class LocationsModule {}

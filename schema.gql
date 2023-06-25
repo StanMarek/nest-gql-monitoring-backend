@@ -31,6 +31,11 @@ enum Role {
   ADMIN
 }
 
+type Authorization {
+  token: String!
+  expiresIn: Int!
+}
+
 type Location implements BaseSchema {
   _id: ID!
   createdAt: DateTime!
@@ -114,16 +119,11 @@ type Device implements BaseSchema {
   currentVersion: String!
   latestVersion: String!
   serial: String!
-  user: User
+  user: User!
   config: DeviceConfig!
-  location: Location
+  location: Location!
   isActive: Boolean!
   publishTopic: String!
-}
-
-type Authorization {
-  token: String!
-  expiresIn: Int!
 }
 
 type Query {
@@ -139,12 +139,12 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: String!): User!
+  signIn(signIn: SignInInput!): Authorization!
+  signUp(signUp: SignUpInput!): User!
   createDevice(createDeviceInput: CreateDeviceInput!): Device!
   updateDevice(updateDeviceInput: UpdateDeviceInput!): Device!
   setDeviceConfig(setDeviceConfigInput: SetDeviceConfigInput!): Device!
   removeDevice(id: String!): Device!
-  signIn(signIn: SignInInput!): Authorization!
-  signUp(signUp: SignUpInput!): User!
   createLocation(createLocationInput: CreateLocationInput!): Location!
   updateLocation(updateLocationInput: UpdateLocationInput!): Location!
   removeLocation(id: String!): Location!
@@ -167,6 +167,20 @@ input UpdateUserInput {
   password: String
   role: String = "CLIENT_USER"
   id: String!
+}
+
+input SignInInput {
+  email: String!
+  password: String!
+}
+
+input SignUpInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  phone: String!
+  password1: String!
+  password2: String!
 }
 
 input CreateDeviceInput {
@@ -244,20 +258,6 @@ input SystemInput {
   led_time2: Int!
   led_light2: Int!
   buzz_time2: Int!
-}
-
-input SignInInput {
-  email: String!
-  password: String!
-}
-
-input SignUpInput {
-  firstName: String!
-  lastName: String!
-  email: String!
-  phone: String!
-  password1: String!
-  password2: String!
 }
 
 input CreateLocationInput {

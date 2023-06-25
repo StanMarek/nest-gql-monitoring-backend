@@ -1,10 +1,20 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { Types } from 'mongoose';
 import { AllowRole } from 'src/auth/decorators/role.decorator';
 import { GqlAuthGuard } from 'src/auth/guard/gql-auth.guard';
 import { RoleGuard } from 'src/auth/guard/role.guard';
-import { Role } from 'src/users/entities/user.entity';
+import { Location } from 'src/locations/entities/location.entity';
+import { LocationsService } from 'src/locations/locations.service';
+import { Role, User } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/users/users.service';
 import { DevicesService } from './devices.service';
 import { CreateDeviceInput } from './dto/create-device.input';
 import { SetDeviceConfigInput } from './dto/set-device-config.input';
@@ -13,7 +23,11 @@ import { Device } from './entities/device.entity';
 
 @Resolver(() => Device)
 export class DevicesResolver {
-  constructor(private readonly devicesService: DevicesService) {}
+  constructor(
+    private readonly devicesService: DevicesService,
+    private readonly usersService: UsersService,
+    private readonly locationsService: LocationsService,
+  ) {}
 
   @UseGuards(GqlAuthGuard, RoleGuard)
   @AllowRole(Role.ADMIN)
@@ -66,5 +80,17 @@ export class DevicesResolver {
   @Mutation(() => Device)
   removeDevice(@Args('id', { type: () => String }) id: Types.ObjectId) {
     return this.devicesService.remove({ _id: id });
+  }
+
+  @ResolveField('user', () => User)
+  async getDeviceUser(@Parent() device: Device) {
+    const { user } = device;
+    return this.usersService.findOne({ _id: user });
+  }
+
+  @ResolveField('location', () => Location)
+  async getDeviceLocation(@Parent() device: Device) {
+    const { location } = device;
+    return this.locationsService.findOne({ _id: location });
   }
 }
