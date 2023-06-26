@@ -94,9 +94,9 @@ export class DevicesResolver {
   @Mutation(() => Device)
   registerDevice(
     @GetUser() user: User,
-    @Args('id', { type: () => String }) id: Types.ObjectId,
+    @Args('serial', { type: () => String }) serial: string,
   ) {
-    return this.devicesService.update({ _id: id, user }, { user });
+    return this.devicesService.registerDevice(serial, user);
   }
 
   @UseGuards(GqlAuthGuard, RoleGuard)

@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { BaseService } from 'src/common/base.service';
 import { DEFAULT_DEVICE_CONFIG } from 'src/constants';
+import { User } from 'src/users/entities/user.entity';
 import { CreateDeviceInput } from './dto/create-device.input';
 import { SetDeviceConfigInput } from './dto/set-device-config.input';
 import { UpdateDeviceInput } from './dto/update-device.input';
@@ -78,5 +79,17 @@ export class DevicesService extends BaseService<
         new: true,
       },
     );
+  }
+
+  async registerDevice(serial: string, user: User) {
+    const device = await this.findOne({ serial });
+
+    if (device.user) {
+      throw new BadRequestException(
+        `Device with serial '${serial}' already registered`,
+      );
+    }
+
+    return this.update({ _id: device._id }, { user });
   }
 }
