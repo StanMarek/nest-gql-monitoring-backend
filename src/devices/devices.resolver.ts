@@ -18,6 +18,7 @@ import { LocationsService } from 'src/locations/locations.service';
 import { Role, User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { DevicesService } from './devices.service';
+import { AssignDeviceLocationInput } from './dto/assign-device-location.input';
 import { CreateDeviceInput } from './dto/create-device.input';
 import { SetDeviceConfigInput } from './dto/set-device-config.input';
 import { UpdateDeviceInput } from './dto/update-device.input';
@@ -97,6 +98,17 @@ export class DevicesResolver {
     @Args('serial', { type: () => String }) serial: string,
   ) {
     return this.devicesService.registerDevice(serial, user);
+  }
+
+  @UseGuards(GqlAuthGuard, RoleGuard)
+  @AllowRole(Role.CLIENT_ADMIN)
+  @Mutation(() => Device)
+  assignDeviceLocation(
+    @GetUser() user: User,
+    @Args('assignDeviceLocationInput')
+    assignDeviceLocationInput: AssignDeviceLocationInput,
+  ) {
+    return this.devicesService.assignLocation(assignDeviceLocationInput, user);
   }
 
   @UseGuards(GqlAuthGuard, RoleGuard)

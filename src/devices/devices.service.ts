@@ -4,7 +4,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { BaseService } from 'src/common/base.service';
 import { DEFAULT_DEVICE_CONFIG } from 'src/constants';
+import { LocationsService } from 'src/locations/locations.service';
 import { User } from 'src/users/entities/user.entity';
+import { AssignDeviceLocationInput } from './dto/assign-device-location.input';
 import { CreateDeviceInput } from './dto/create-device.input';
 import { SetDeviceConfigInput } from './dto/set-device-config.input';
 import { UpdateDeviceInput } from './dto/update-device.input';
@@ -20,6 +22,7 @@ export class DevicesService extends BaseService<
     @InjectModel(Device.name)
     private deviceModel: Model<DeviceDocument>,
     private readonly configService: ConfigService,
+    private readonly locationsService: LocationsService,
   ) {
     super(deviceModel);
   }
@@ -91,5 +94,28 @@ export class DevicesService extends BaseService<
     }
 
     return this.update({ _id: device._id }, { user });
+  }
+
+  async assignLocation(
+    assignDeviceLocationInput: AssignDeviceLocationInput,
+    user: User,
+  ) {
+    const device = await this.findOne({
+      _id: assignDeviceLocationInput.deviceId,
+      user,
+    });
+
+    const location = await this.locationsService.findOne({
+      _id: assignDeviceLocationInput.locationId,
+      user,
+    });
+
+    if (!location) {
+      throw new BadRequestException(
+        `Location with id '${assignDeviceLocationInput.locationId}' not found`,
+      );
+    }
+
+    return this.update({ _id: device._id }, { location });
   }
 }

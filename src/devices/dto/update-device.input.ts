@@ -1,5 +1,6 @@
 import { Field, InputType, OmitType, PartialType } from '@nestjs/graphql';
 import { IsMongoId, IsOptional, IsSemVer } from 'class-validator';
+import { Location } from 'src/locations/entities/location.entity';
 import { User } from 'src/users/entities/user.entity';
 import { CreateDeviceInput } from './create-device.input';
 
@@ -23,4 +24,6 @@ export class UpdateDeviceInput extends OmitType(
   latestVersion?: string;
 
   user?: User;
+
+  location?: Location;
 }
