@@ -44,8 +44,9 @@ export class Device extends BaseSchema {
   isActive: boolean;
 
   @Prop({ required: true })
-  @Field()
   publishTopic: string;
+  @Prop({ required: false })
+  previousConfigTimestamp: number;
 }
 
 export type DeviceDocument = Device & Document;

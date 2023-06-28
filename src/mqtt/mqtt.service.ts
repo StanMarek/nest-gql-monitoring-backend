@@ -52,6 +52,6 @@ export class MqttService implements OnModuleInit {
   handleMessage(message: Buffer) {
     const messageString = message.toString();
     const messageJson: Message = JSON.parse(messageString);
-    this.deviceMessageService.handleMessage(messageJson);
+    this.deviceMessageService.handleIncomingMessage(messageJson);
   }
 }

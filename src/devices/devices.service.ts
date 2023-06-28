@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model } from 'mongoose';
+import { FilterQuery, Model, UpdateQuery } from 'mongoose';
 import { BaseService } from 'src/common/base.service';
 import { DEFAULT_DEVICE_CONFIG } from 'src/constants';
 import { LocationsService } from 'src/locations/locations.service';
@@ -29,17 +29,21 @@ export class DevicesService extends BaseService<
 
   async create(createDeviceInput: CreateDeviceInput) {
     await this.validate(createDeviceInput);
+
     const publishTopic = `${this.configService.get<string>(
       'MQTT_PUBLISH_TOPIC',
     )}/${createDeviceInput.serial}/servertodevice`;
+    const timestamp = new Date().getTime();
+
     return this.deviceModel.create({
       serial: createDeviceInput.serial,
       publishTopic,
       latestVersion: createDeviceInput.version,
       currentVersion: createDeviceInput.version,
+      previousConfigTimestamp: timestamp,
       config: {
         ...DEFAULT_DEVICE_CONFIG,
-        timestamp: new Date().getTime(),
+        timestamp,
       },
     });
   }
@@ -68,13 +72,14 @@ export class DevicesService extends BaseService<
     filter: FilterQuery<Device>,
     setDeviceConfigInput: SetDeviceConfigInput,
   ) {
-    await this.findOne(filter);
+    const device = await this.findOne(filter);
     delete setDeviceConfigInput.id;
 
     return this.deviceModel.findOneAndUpdate(
       filter,
       {
         $set: {
+          previousConfigTimestamp: device.config.timestamp,
           config: { ...setDeviceConfigInput, timestamp: new Date().getTime() },
         },
       },
@@ -117,5 +122,12 @@ export class DevicesService extends BaseService<
     }
 
     return this.update({ _id: device._id }, { location });
+  }
+
+  async updateAfterReceivedMessage(
+    filter: FilterQuery<DeviceDocument>,
+    update: UpdateQuery<DeviceDocument>,
+  ) {
+    return this.deviceModel.findOneAndUpdate(filter, update, { new: true });
   }
 }
