@@ -118,15 +118,15 @@ export class DevicesResolver {
     return this.devicesService.remove({ _id: id });
   }
 
-  @ResolveField('user', () => User)
+  @ResolveField('user', () => User, { nullable: true })
   async getDeviceUser(@Parent() device: Device) {
     const { user } = device;
-    return this.usersService.findOne({ _id: user });
+    return user ? this.usersService.findOne({ _id: user }) : null;
   }
 
-  @ResolveField('location', () => Location)
+  @ResolveField('location', () => Location, { nullable: true })
   async getDeviceLocation(@Parent() device: Device) {
     const { location } = device;
-    return this.locationsService.findOne({ _id: location });
+    return location ? this.locationsService.findOne({ _id: location }) : null;
   }
 }

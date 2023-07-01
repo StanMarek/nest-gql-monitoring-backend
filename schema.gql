@@ -10,7 +10,6 @@ type User implements BaseSchema {
   lastName: String!
   email: String!
   phone: String!
-  password: String!
   role: Role!
 }
 
@@ -112,6 +111,20 @@ type DeviceConfig {
   system: SystemConfig!
 }
 
+type Diagnostics {
+  bssid: String!
+  rssi: Int!
+  uptime: Int!
+  conUptime: Int!
+  configId: Int!
+  errorFlag: Int!
+  fw: String!
+  memFree: Int!
+  powerMode: Int!
+  temperature: Int!
+  date: DateTime!
+}
+
 type Device implements BaseSchema {
   _id: ID!
   createdAt: DateTime!
@@ -119,10 +132,11 @@ type Device implements BaseSchema {
   currentVersion: String!
   latestVersion: String!
   serial: String!
-  user: User!
+  user: User
   config: DeviceConfig!
-  location: Location!
+  location: Location
   isActive: Boolean!
+  diagnostics: [Diagnostics!]!
 }
 
 type Query {

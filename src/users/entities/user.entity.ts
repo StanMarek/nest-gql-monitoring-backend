@@ -32,7 +32,6 @@ export class User extends BaseSchema {
   phone: string;
 
   @Prop({ required: true })
-  @Field()
   password: string;
 
   @Prop({ required: true, default: Role.CLIENT_USER })

@@ -5,6 +5,7 @@ import { BaseSchema } from 'src/common/base.schema';
 import { Location } from 'src/locations/entities/location.entity';
 import { User } from 'src/users/entities/user.entity';
 import { DeviceConfig } from './device-config.schema';
+import { Diagnostics } from './diagnostics.schema';
 
 @Schema({ timestamps: true })
 @ObjectType({
@@ -23,8 +24,13 @@ export class Device extends BaseSchema {
   @Field()
   serial: string;
 
-  @Prop({ required: false, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  @Field(() => User, { nullable: true })
+  @Prop({
+    required: false,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null,
+  })
+  @Field(() => User, { nullable: true, defaultValue: null })
   user?: User;
 
   @Prop({ type: DeviceConfig, required: true })
@@ -35,8 +41,9 @@ export class Device extends BaseSchema {
     required: false,
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Location',
+    default: null,
   })
-  @Field(() => Location, { nullable: true })
+  @Field(() => Location, { nullable: true, defaultValue: null })
   location?: Location;
 
   @Prop({ required: true, default: true })
@@ -45,8 +52,13 @@ export class Device extends BaseSchema {
 
   @Prop({ required: true })
   publishTopic: string;
+
   @Prop({ required: false })
   previousConfigTimestamp: number;
+
+  @Prop({ default: [] })
+  @Field(() => [Diagnostics], { defaultValue: [] })
+  diagnostics: Diagnostics[];
 }
 
 export type DeviceDocument = Device & Document;
