@@ -1,7 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as mqtt from 'mqtt';
 import { compare } from 'semver';
-import { HeartbeatMessageData, Message } from 'src/common/types/message-type';
+import {
+  Heartbeat,
+  HeartbeatMessageData,
+  Message,
+} from 'src/common/types/message-type';
 import { DevicesService } from './devices.service';
 
 @Injectable()
@@ -43,14 +47,20 @@ export class DevicesMessageService {
 
         case 'heartbeat':
           const data: HeartbeatMessageData = message.message.data;
+          const diagnostics: Heartbeat = {
+            ...data,
+            date: new Date(),
+            configId: data.config_id,
+            conUptime: data.con_uptime,
+            errorFlag: data.error_flag,
+            memFree: data.mem_free,
+            powerMode: data.power_mode,
+          };
           await this.devicesService.updateAfterReceivedMessage(
             { _id: device._id },
             {
               $push: {
-                diagnostics: {
-                  ...data,
-                  date: new Date(),
-                },
+                diagnostics,
               },
             },
           );

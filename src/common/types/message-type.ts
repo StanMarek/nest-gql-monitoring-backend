@@ -39,4 +39,5 @@ export type Heartbeat = Omit<
   errorFlag: number;
   memFree: number;
   powerMode: number;
+  date: Date;
 };
