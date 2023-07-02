@@ -111,7 +111,7 @@ type DeviceConfig {
   system: SystemConfig!
 }
 
-type Diagnostics {
+type Diagnostic {
   bssid: String!
   rssi: Int!
   uptime: Int!
@@ -122,6 +122,45 @@ type Diagnostics {
   memFree: Int!
   powerMode: Int!
   temperature: Int!
+  date: DateTime!
+}
+
+type ReportEnvironment {
+  h: Int!
+  t: Int!
+  hAvg: Int!
+  tAvg: Int!
+  hMax: Int!
+  tMax: Int!
+  hMin: Int!
+  tMin: Int!
+}
+
+type ReportMic {
+  alarm1Cnt: Int!
+  alarm2Cnt: Int!
+  alarmAl1Cnt: Int!
+  alarmAl2Cnt: Int!
+  avgDb: Int!
+  maxDb: Int!
+  micTamer: Int!
+  noiseLvlDb: Int!
+}
+
+type ReportPirsensor {
+  cnt: Int!
+  time: Int!
+}
+
+type ReportLight {
+  light: Int!
+}
+
+type Report {
+  environment: ReportEnvironment!
+  mic: ReportMic!
+  pirsensor: ReportPirsensor!
+  lightsensor: ReportLight!
   date: DateTime!
 }
 
@@ -136,7 +175,8 @@ type Device implements BaseSchema {
   config: DeviceConfig!
   location: Location
   isActive: Boolean!
-  diagnostics: [Diagnostics!]!
+  diagnostics: [Diagnostic!]!
+  reports: [Report!]!
 }
 
 type Query {

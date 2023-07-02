@@ -2,7 +2,7 @@ export interface Message {
   device_id: string;
   message: {
     type: MessageType;
-    data: HeartbeatMessageData | any;
+    data: HeartbeatMessageData | ReportMessageData | any;
   };
 }
 
@@ -41,3 +41,72 @@ export type Heartbeat = Omit<
   powerMode: number;
   date: Date;
 };
+
+export interface ReportMessageData {
+  env: {
+    h: number;
+    t: number;
+    havg: number;
+    tavg: number;
+    hmax: number;
+    tmax: number;
+    hmin: number;
+    tmin: number;
+  };
+  mic: {
+    alarm1_cnt: number;
+    alarm2_cnt: number;
+    alarm_al1_cnt: number;
+    alarm_al2_cnt: number;
+    avg_db: number;
+    max_db: number;
+    mic_tamer: number;
+    noise_lvl_db: number;
+  };
+  pirsensor: {
+    cnt: number;
+    time: number;
+  };
+  light: {
+    light: number;
+  };
+}
+
+export interface ReportEnvironmentMessage {
+  h: number;
+  t: number;
+  hAvg: number;
+  tAvg: number;
+  hMax: number;
+  tMax: number;
+  hMin: number;
+  tMin: number;
+}
+
+export interface ReportMicMessage {
+  alarm1Cnt: number;
+  alarm2Cnt: number;
+  alarmAl1Cnt: number;
+  alarmAl2Cnt: number;
+  avgDb: number;
+  maxDb: number;
+  micTamer: number;
+  noiseLvlDb: number;
+}
+
+export interface ReportPirsensorMessage {
+  cnt: number;
+  time: number;
+}
+
+export interface ReportLightMessage {
+  light: number;
+}
+
+export interface ReportMessage {
+  environment: ReportEnvironmentMessage;
+  mic: ReportMicMessage;
+  pirsensor: ReportPirsensorMessage;
+  lightsensor: ReportLightMessage;
+  date: Date;
+}

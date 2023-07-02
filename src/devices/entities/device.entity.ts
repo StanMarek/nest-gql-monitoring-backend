@@ -5,7 +5,8 @@ import { BaseSchema } from 'src/common/base.schema';
 import { Location } from 'src/locations/entities/location.entity';
 import { User } from 'src/users/entities/user.entity';
 import { DeviceConfig } from './device-config.schema';
-import { Diagnostics } from './diagnostics.schema';
+import { Diagnostic, DiagnosticSchema } from './diagnostic.schema';
+import { Report, ReportSchema } from './report.schema';
 
 @Schema({ timestamps: true })
 @ObjectType({
@@ -56,9 +57,13 @@ export class Device extends BaseSchema {
   @Prop({ required: false })
   previousConfigTimestamp: number;
 
-  @Prop({ default: [] })
-  @Field(() => [Diagnostics], { defaultValue: [] })
-  diagnostics: Diagnostics[];
+  @Prop({ type: [DiagnosticSchema], default: [] })
+  @Field(() => [Diagnostic], { defaultValue: [] })
+  diagnostics: Diagnostic[];
+
+  @Prop({ type: [ReportSchema], default: [] })
+  @Field(() => [Report], { defaultValue: [] })
+  reports: Report[];
 }
 
 export type DeviceDocument = Device & Document;

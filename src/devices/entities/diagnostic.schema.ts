@@ -1,10 +1,10 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Heartbeat } from 'src/common/types/message-type';
 
 @Schema({ timestamps: true })
 @ObjectType()
-export class Diagnostics implements Heartbeat {
+export class Diagnostic implements Heartbeat {
   @Field()
   @Prop({ required: true })
   bssid: string;
@@ -49,3 +49,5 @@ export class Diagnostics implements Heartbeat {
   @Prop({ required: true })
   date: Date;
 }
+
+export const DiagnosticSchema = SchemaFactory.createForClass(Diagnostic);
