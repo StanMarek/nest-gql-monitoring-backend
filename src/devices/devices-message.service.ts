@@ -173,8 +173,11 @@ export class DevicesMessageService {
         default:
           break;
       }
+
+      this.logger.debug(`Message handled`);
+    } else {
+      this.logger.debug(`Device not found`);
     }
-    this.logger.debug(`Message handled`);
   }
 
   private handleOutgoingMessage(topic: string, message: object) {

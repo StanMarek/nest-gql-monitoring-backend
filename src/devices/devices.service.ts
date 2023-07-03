@@ -49,7 +49,7 @@ export class DevicesService extends BaseService<
   }
 
   findOneBySerial(serial: string) {
-    return this.findOne({ serial });
+    return this.deviceModel.findOne({ serial });
   }
 
   deleteMany(filter: FilterQuery<Device>) {
