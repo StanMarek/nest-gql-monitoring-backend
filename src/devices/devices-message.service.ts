@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import * as mqtt from 'mqtt';
+import { MqttClient } from '@nestjs/microservices/external/mqtt-client.interface';
 import { compare } from 'semver';
 import {
   Heartbeat,
@@ -12,12 +12,12 @@ import { DevicesService } from './devices.service';
 
 @Injectable()
 export class DevicesMessageService {
-  private mqttClient: mqtt.MqttClient = null;
+  private mqttClient: MqttClient = null;
   private logger = new Logger(DevicesMessageService.name);
 
   constructor(private readonly devicesService: DevicesService) {}
 
-  setMqttClient(mqttClient: mqtt.MqttClient) {
+  setMqttClient(mqttClient: MqttClient) {
     this.mqttClient = mqttClient;
   }
 
