@@ -26,13 +26,12 @@ export class MqttService implements OnModuleInit {
       if (this.mqttClient.connected) {
         this.logger.debug(`Connected to ${this.mqttClient.options.url}`);
         this.deviceMessageService.setMqttClient(this.mqttClient);
+        this.mqttClient.subscribe(subscribeTopic, (err) => {
+          if (!err) {
+            this.logger.debug(`Subscribed to ${subscribeTopic}`);
+          }
+        });
       }
-
-      this.mqttClient.subscribe(subscribeTopic, (err) => {
-        if (!err) {
-          this.logger.debug(`Subscribed to ${subscribeTopic}`);
-        }
-      });
     });
 
     this.mqttClient.on('message', (topic, message) => {

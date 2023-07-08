@@ -2,7 +2,7 @@ export interface Message {
   device_id: string;
   message: {
     type: MessageType;
-    data: HeartbeatMessageData | ReportMessageData | any;
+    data: HeartbeatMessageData | ReportMessageData | AlertMessageData;
   };
 }
 
@@ -109,4 +109,15 @@ export interface ReportMessage {
   pirsensor: ReportPirsensorMessage;
   lightsensor: ReportLightMessage;
   date: Date;
+}
+
+export interface AlertMicData {
+  alert_lvl: number;
+  db: number;
+  limit: number;
+}
+
+export interface AlertMessageData {
+  severity: number;
+  mic?: AlertMicData;
 }
