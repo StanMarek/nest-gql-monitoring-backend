@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { FilterQuery, Model, UpdateQuery } from 'mongoose';
 import { BaseService } from 'src/common/base.service';
 import { CreateLocationInput } from './dto/create-location.input';
 import { UpdateLocationInput } from './dto/update-location.input';
@@ -17,5 +17,12 @@ export class LocationsService extends BaseService<
     private locationModel: Model<LocationDocument>,
   ) {
     super(locationModel);
+  }
+
+  async updateAfterReceivedMessage(
+    filter: FilterQuery<LocationDocument>,
+    update: UpdateQuery<LocationDocument>,
+  ) {
+    return this.locationModel.findOneAndUpdate(filter, update, { new: true });
   }
 }

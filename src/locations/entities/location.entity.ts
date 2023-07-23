@@ -2,6 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { BaseSchema } from 'src/common/base.schema';
+import { Report, ReportSchema } from 'src/locations/entities/report.schema';
 import { User } from 'src/users/entities/user.entity';
 
 @Schema({ timestamps: true })
@@ -38,6 +39,10 @@ export class Location extends BaseSchema {
   user: User;
   // latitude: number;
   // longitude: number;
+
+  @Prop({ type: [ReportSchema], default: [] })
+  @Field(() => [Report], { defaultValue: [] })
+  reports: Report[];
 }
 
 export type LocationDocument = Location & Document;

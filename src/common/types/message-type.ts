@@ -109,6 +109,7 @@ export interface ReportMessage {
   pirsensor: ReportPirsensorMessage;
   lightsensor: ReportLightMessage;
   date: Date;
+  device: string;
 }
 
 export interface AlertMicData {

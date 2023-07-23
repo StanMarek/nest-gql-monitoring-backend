@@ -99,6 +99,10 @@ export class Report implements ReportMessage {
   @Prop({ type: Date, required: true })
   @Field(() => Date)
   date: Date;
+
+  @Prop({ required: true })
+  @Field()
+  device: string;
 }
 
 export const ReportSchema = SchemaFactory.createForClass(Report);

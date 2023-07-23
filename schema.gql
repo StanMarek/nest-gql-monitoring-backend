@@ -35,6 +35,46 @@ type Authorization {
   expiresIn: Int!
 }
 
+type ReportEnvironment {
+  h: Int!
+  t: Int!
+  hAvg: Int!
+  tAvg: Int!
+  hMax: Int!
+  tMax: Int!
+  hMin: Int!
+  tMin: Int!
+}
+
+type ReportMic {
+  alarm1Cnt: Int!
+  alarm2Cnt: Int!
+  alarmAl1Cnt: Int!
+  alarmAl2Cnt: Int!
+  avgDb: Int!
+  maxDb: Int!
+  micTamer: Int!
+  noiseLvlDb: Int!
+}
+
+type ReportPirsensor {
+  cnt: Int!
+  time: Int!
+}
+
+type ReportLight {
+  light: Int!
+}
+
+type Report {
+  environment: ReportEnvironment!
+  mic: ReportMic!
+  pirsensor: ReportPirsensor!
+  lightsensor: ReportLight!
+  date: DateTime!
+  device: String!
+}
+
 type Location implements BaseSchema {
   _id: ID!
   createdAt: DateTime!
@@ -46,6 +86,7 @@ type Location implements BaseSchema {
   address: String!
   code: String!
   user: User!
+  reports: [Report!]!
 }
 
 type EnvConfig {
@@ -125,45 +166,6 @@ type Diagnostic {
   date: DateTime!
 }
 
-type ReportEnvironment {
-  h: Int!
-  t: Int!
-  hAvg: Int!
-  tAvg: Int!
-  hMax: Int!
-  tMax: Int!
-  hMin: Int!
-  tMin: Int!
-}
-
-type ReportMic {
-  alarm1Cnt: Int!
-  alarm2Cnt: Int!
-  alarmAl1Cnt: Int!
-  alarmAl2Cnt: Int!
-  avgDb: Int!
-  maxDb: Int!
-  micTamer: Int!
-  noiseLvlDb: Int!
-}
-
-type ReportPirsensor {
-  cnt: Int!
-  time: Int!
-}
-
-type ReportLight {
-  light: Int!
-}
-
-type Report {
-  environment: ReportEnvironment!
-  mic: ReportMic!
-  pirsensor: ReportPirsensor!
-  lightsensor: ReportLight!
-  date: DateTime!
-}
-
 type Device implements BaseSchema {
   _id: ID!
   createdAt: DateTime!
@@ -176,7 +178,6 @@ type Device implements BaseSchema {
   location: Location
   isActive: Boolean!
   diagnostics: [Diagnostic!]!
-  reports: [Report!]!
 }
 
 type Query {

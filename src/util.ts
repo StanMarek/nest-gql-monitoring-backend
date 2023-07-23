@@ -7,6 +7,7 @@ import {
 
 export const castMessageDataToEntity = (
   reportData: ReportMessageData,
+  serial: string,
 ): ReportMessage => {
   return {
     date: new Date(),
@@ -37,6 +38,7 @@ export const castMessageDataToEntity = (
       cnt: reportData.pirsensor.cnt,
       time: reportData.pirsensor.time,
     },
+    device: serial,
   };
 };
 

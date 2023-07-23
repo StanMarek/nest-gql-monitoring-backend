@@ -6,6 +6,7 @@ import {
   Message,
   ReportMessageData,
 } from 'src/common/types/message-type';
+import { LocationsService } from 'src/locations/locations.service';
 import { castHeartbeatDataToEntity, castMessageDataToEntity } from 'src/util';
 import { DevicesService } from './devices.service';
 
@@ -14,7 +15,10 @@ export class DevicesMessageService {
   private mqttClient: MqttClient = null;
   private logger = new Logger(DevicesMessageService.name);
 
-  constructor(private readonly devicesService: DevicesService) {}
+  constructor(
+    private readonly devicesService: DevicesService,
+    private readonly locationsService: LocationsService,
+  ) {}
 
   setMqttClient(mqttClient: MqttClient) {
     this.mqttClient = mqttClient;
@@ -47,7 +51,7 @@ export class DevicesMessageService {
           break;
 
         case 'heartbeat':
-          const diagnoscticsData: HeartbeatMessageData = message.message.data;
+          const diagnoscticsData = message.message.data as HeartbeatMessageData;
           const diagnostics = castHeartbeatDataToEntity(diagnoscticsData);
           await this.devicesService.updateAfterReceivedMessage(
             { _id: device._id },
@@ -121,21 +125,22 @@ export class DevicesMessageService {
         case 'alert_stop':
           break;
         case 'report':
-          const reportData: ReportMessageData = message.message.data;
-          const report = castMessageDataToEntity(reportData);
-          await this.devicesService.updateAfterReceivedMessage(
-            { _id: device._id },
-            {
-              $push: {
-                reports: report,
+          const reportData = message.message.data as ReportMessageData;
+          const report = castMessageDataToEntity(reportData, message.device_id);
+          if (device.location) {
+            await this.locationsService.updateAfterReceivedMessage(
+              { _id: device.location },
+              {
+                $push: {
+                  reports: report,
+                },
               },
-            },
-          );
+            );
+          }
           break;
         default:
           break;
       }
-
       this.logger.debug(`Message handled`);
     } else {
       this.logger.debug(`Device not found`);
