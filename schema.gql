@@ -86,7 +86,12 @@ type Location implements BaseSchema {
   address: String!
   code: String!
   user: User!
-  reports: [Report!]!
+  reports(reportDateFilter: ReportDateFilterInput!): [Report!]!
+}
+
+input ReportDateFilterInput {
+  from: DateTime!
+  to: DateTime!
 }
 
 type EnvConfig {

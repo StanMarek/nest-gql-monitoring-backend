@@ -16,8 +16,10 @@ import { UserInterceptor } from 'src/common/user.interceptor';
 import { Role, User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { CreateLocationInput } from './dto/create-location.input';
+import { ReportDateFilterInput } from './dto/report-date-filter.input';
 import { UpdateLocationInput } from './dto/update-location.input';
 import { Location } from './entities/location.entity';
+import { Report } from './entities/report.schema';
 import { LocationsService } from './locations.service';
 
 @UseInterceptors(UserInterceptor)
@@ -85,5 +87,17 @@ export class LocationsResolver {
   async getLocationUser(@Parent() location: Location) {
     const { user } = location;
     return this.usersService.findOne({ _id: user });
+  }
+
+  @ResolveField('reports', () => [Report])
+  async getLocationReports(
+    @Parent() location: Location,
+    @Args('reportDateFilter') filter: ReportDateFilterInput,
+  ) {
+    const startDate = new Date(filter.from);
+    const endDate = new Date(filter.to);
+    return location.reports.filter(
+      (report) => report.date >= startDate && report.date <= endDate,
+    );
   }
 }
