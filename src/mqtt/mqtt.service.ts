@@ -14,7 +14,7 @@ export class MqttService implements OnModuleInit {
     @Inject('MQTT_BROKER') private readonly mqttBroker: ClientMqtt,
     private readonly configService: ConfigService,
     private readonly deviceMessageService: DevicesMessageService,
-  ) {}
+  ) { }
 
   onModuleInit() {
     const subscribeTopic = this.configService.get<string>(
@@ -47,8 +47,11 @@ export class MqttService implements OnModuleInit {
   }
 
   handleMessage(message: Buffer) {
-    const messageString = message.toString();
-    const messageJson: Message = JSON.parse(messageString);
-    this.deviceMessageService.handleIncomingMessage(messageJson);
+    try {
+      const messageJson: Message = JSON.parse(message.toString());
+      this.deviceMessageService.handleIncomingMessage(messageJson);
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 }
